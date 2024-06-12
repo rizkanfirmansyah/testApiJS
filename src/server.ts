@@ -1,5 +1,5 @@
 import Fastify, { FastifyInstance } from "fastify";
-import userRoutes from "./routes/api";
+import { bookRoutes, userRoutes } from "./routes/api";
 import { withRefResolver } from "fastify-zod";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
@@ -44,6 +44,7 @@ function buildServer() {
   server.register(swaggerUI, swaggerUiOptions);
 
   server.register(userRoutes, { prefix: "api/users" });
+  server.register(bookRoutes, { prefix: "api/books" });
 
   return server;
 }
