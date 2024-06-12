@@ -57,17 +57,16 @@ async function seeder() {
 
     const genreId = genreInsert[0].id;
 
-    // Insert data ke dalam tabel books
-    await db.insert(books).values({
-      name: "Naruto",
-      description:
-        "Naruto Shippuden adalah sebuah seri anime yang diadaptasi dari bagian II manga Naruto. Serial ini disutradarai oleh Hayato Date dan diproduksi oleh Studio Pierrot dan TV Tokyo. Pada bagian ini, pergerakan organisasi Akatsuki semakin terlihat.",
-      pages: 200,
-      published_at: new Date("2022-01-01"),
-      author: "Masashi Kishimoto",
-      price: 300.0,
-      genre_id: genreId,
-    });
+    // await db.insert(books).values({
+    //   name: "Naruto",
+    //   description:
+    //     "Naruto Shippuden adalah sebuah seri anime yang diadaptasi dari bagian II manga Naruto. Serial ini disutradarai oleh Hayato Date dan diproduksi oleh Studio Pierrot dan TV Tokyo. Pada bagian ini, pergerakan organisasi Akatsuki semakin terlihat.",
+    //   pages: 200,
+    //   published_at: new Date("2022-01-01"),
+    //   author: "Masashi Kishimoto",
+    //   price: 300.0,
+    //   genre_id: genreId,
+    // });
 
     console.log("Seed start");
     await db.insert(user).values(data);
