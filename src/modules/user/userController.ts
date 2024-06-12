@@ -7,7 +7,7 @@ import { CustomError } from "../../utils/types/error";
 import { LoginInput } from "./userSchema";
 import { server } from "../../server";
 
-export async function getUserHandler(request: FastifyRequest, res: FastifyReply) {
+export async function getUserHandler(req: FastifyRequest, res: FastifyReply) {
   const data = await getUser();
 
   return ResponseJSON({ data, res });

@@ -13,6 +13,14 @@ export async function getUser() {
 export async function registerUser({ username, password, email }: RegisterType) {
   const DB = await setupDatabase();
   try {
+    const checkUser = await DB.select()
+      .from(user)
+      .where(sql`${user.email} = ${email} or ${user.name} = ${username}`);
+
+    if (checkUser.length > 0) {
+      return { message: "User has been registered", status: 403, data: null };
+    }
+
     const data = await DB.insert(user)
       .values({
         name: username,
