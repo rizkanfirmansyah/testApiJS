@@ -72,6 +72,7 @@ async function seeder() {
     // });
 
     console.log("Seed done");
+    process.exit();
   } catch (error) {
     console.error("Error seeding the database:", error);
   }
