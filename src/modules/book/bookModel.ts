@@ -1,16 +1,29 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import { books } from "../../../database/schema/book";
-import setupDatabase from "../../../database";
-import { BookType } from "../../utils/types/book";
 import { sql } from "drizzle-orm";
+import setupDatabase from "../../../database";
+import { books } from "../../../database/schema/book";
+import { BookType } from "../../utils/types/book";
 
-export async function getBooks({ id = null }: any) {
+export async function getBooks({ id = null, bookId = "0" }: any) {
   const DB = await setupDatabase();
-  const result = await DB.select()
-    .from(books)
-    .where(sql`${books.user_id} = ${id}`);
 
-  return result;
+  if (bookId != "0") {
+    const result = await DB.select()
+      .from(books)
+      .where(sql`${books.id} = ${bookId}`);
+    return result ? result[0] : null;
+  }
+  if (id > 0) {
+    const result = await DB.select()
+      .from(books)
+      .where(sql`${books.user_id} = ${id}`);
+    return result;
+  }
+  if (id < 1) {
+    const result = await DB.select()
+      .from(books)
+      .where(sql`${books.user_id} is null`);
+    return result;
+  }
 }
 
 export async function insertBook({

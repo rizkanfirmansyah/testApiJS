@@ -6,7 +6,10 @@ import { createError } from "../../utils/errorUtils";
 
 export async function getBookHandler(req: FastifyRequest, res: FastifyReply) {
   const id = req.user?.id ?? null;
-  const data = await getBooks({ id });
+  const params = req.params as { bookId: string };
+  const { bookId } = params;
+
+  const data = await getBooks({ id, bookId });
 
   try {
     ResponseJSON({ data, message: "Book has already!", res });

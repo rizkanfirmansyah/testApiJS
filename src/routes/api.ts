@@ -7,8 +7,11 @@ async function userRoutes(server: FastifyInstance) {
 }
 
 async function bookRoutes(server: FastifyInstance) {
-  server.get("/", getBookHandler);
-  server.post("/", insertBookHandler);
+  server.get("/", { preHandler: [server.authenticate] }, getBookHandler);
+  server.get("/:bookId", { preHandler: [server.authenticate] }, getBookHandler);
+  server.get("/all", getBookHandler);
+  server.post("/all", insertBookHandler);
+  server.post("/", { preHandler: [server.authenticate] }, insertBookHandler);
 }
 
 async function authRoutes(server: FastifyInstance) {
