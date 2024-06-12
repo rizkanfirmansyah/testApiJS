@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { dbname, dbhost, dbpassword, dbport, dbuser } from "./config";
 dotenv.config();
 
 let DB: any = null;
@@ -10,13 +11,9 @@ export default async function setupDatabase() {
     return DB;
   }
 
-  const host = process.env.DB_HOST ?? "0.0.0.0";
-  const user = process.env.DB_USER ?? "postgres";
-  const password = process.env.DB_PASSWORD ?? "password";
-  const dbname = process.env.DB_NAME ?? "fastify";
-  const port = process.env.DB_PORT ?? 5432;
-
-  const Sql = postgres(process.env.DB_URL ?? `postgres://${user}:${password}@${host}:${port}/${dbname}`, { max: 1 });
+  const Sql = postgres(process.env.DB_URL ?? `postgres://${dbuser}:${dbpassword}@${dbhost}:${dbport}/${dbname}`, {
+    max: 1,
+  });
   try {
     DB = drizzle(Sql);
     // Optionally run migrations

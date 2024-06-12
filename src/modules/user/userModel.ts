@@ -34,6 +34,7 @@ export async function loginUser({ username }: LoginType) {
       .from(user)
       .where(sql`${user.name} = ${username}`)
       .limit(1);
+
     return data;
   } catch (error) {
     return null;

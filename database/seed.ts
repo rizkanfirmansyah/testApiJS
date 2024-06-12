@@ -4,16 +4,13 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { user } from "./schema/user";
 import { books, categories, genres } from "./schema/book";
+import { dbname, dbhost, dbpassword, dbport, dbuser } from "./config";
 
 async function seeder() {
-  const host = process.env.DB_HOST ?? "0.0.0.0";
-  const user = process.env.DB_USER ?? "postgres";
-  const password = process.env.DB_PASSWORD ?? "password";
-  const dbname = process.env.DB_NAME ?? "fastify";
-  const port = process.env.DB_PORT ?? 5432;
-
-  const Sql = postgres(process.env.DB_URL ?? `postgres://${user}:${password}@${host}:${port}/${dbname}`, { max: 1 });
-  const db = drizzle(sql);
+  const Sql = postgres(process.env.DB_URL ?? `postgres://${dbuser}:${dbpassword}@${dbhost}:${dbport}/${dbname}`, {
+    max: 1,
+  });
+  const db = drizzle(Sql);
 
   try {
     const data: (typeof user.$inferInsert)[] = [];
@@ -63,16 +60,19 @@ async function seeder() {
 
     const genreId = genreInsert[0].id;
 
-    // await db.insert(books).values({
-    //   name: "Naruto",
-    //   description:
-    //     "Naruto Shippuden adalah sebuah seri anime yang diadaptasi dari bagian II manga Naruto. Serial ini disutradarai oleh Hayato Date dan diproduksi oleh Studio Pierrot dan TV Tokyo. Pada bagian ini, pergerakan organisasi Akatsuki semakin terlihat.",
-    //   pages: 200,
-    //   published_at: new Date("2022-01-01"),
-    //   author: "Masashi Kishimoto",
-    //   price: 300.0,
-    //   genre_id: genreId,
-    // });
+    await db.insert(books).values({
+      name: "Naruto",
+      description:
+        "Naruto Shippuden adalah sebuah seri anime yang diadaptasi dari bagian II manga Naruto. Serial ini disutradarai oleh Hayato Date dan diproduksi oleh Studio Pierrot dan TV Tokyo. Pada bagian ini, pergerakan organisasi Akatsuki semakin terlihat.",
+      pages: 200,
+      published_at: new Date("2022-01-01"),
+      author: "Masashi Kishimoto",
+      price: 300.0,
+      genre_id: genreId,
+      user_id: 1, // Assuming you have a user with ID 1
+      created_at: new Date("2023-07-05T03:37:51.000000Z"),
+      updated_at: new Date("2023-07-05T03:37:51.000000Z"),
+    });
 
     console.log("Seed start");
     await db.insert(user).values(data);
