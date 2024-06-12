@@ -17,6 +17,7 @@ async function seeder() {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash("12345", saltRounds);
 
+    console.log("Seed start");
     for (let i = 0; i < 5; i++) {
       const name = faker.internet.userName() || "example";
       const email = faker.internet.email() || "example@gmail.com";
@@ -37,6 +38,7 @@ async function seeder() {
         });
       }
     }
+    await db.insert(user).values(data);
 
     const categoryInsert = await db
       .insert(categories)
@@ -48,7 +50,6 @@ async function seeder() {
 
     const categoryId = categoryInsert[0].categoryId;
 
-    // Insert data ke dalam tabel genres
     const genreInsert = await db
       .insert(genres)
       .values({
@@ -60,22 +61,16 @@ async function seeder() {
 
     const genreId = genreInsert[0].id;
 
-    await db.insert(books).values({
-      name: "Naruto",
-      description:
-        "Naruto Shippuden adalah sebuah seri anime yang diadaptasi dari bagian II manga Naruto. Serial ini disutradarai oleh Hayato Date dan diproduksi oleh Studio Pierrot dan TV Tokyo. Pada bagian ini, pergerakan organisasi Akatsuki semakin terlihat.",
-      pages: 200,
-      published_at: new Date("2022-01-01"),
-      author: "Masashi Kishimoto",
-      price: 300.0,
-      genre_id: genreId,
-      user_id: 1, // Assuming you have a user with ID 1
-      created_at: new Date("2023-07-05T03:37:51.000000Z"),
-      updated_at: new Date("2023-07-05T03:37:51.000000Z"),
-    });
+    // const book = await db.insert(books).values({
+    //   name: "Naruto",
+    //   author: "Mashasi Kishimoto",
+    //   genre_id: genreId,
+    //   description: "Komik ninja terlaris tahun 2000an dan anime dengan pendukung termasuk banyak",
+    //   price: 10000,
+    //   pages: 125,
+    //   user_id: 1,
+    // });
 
-    console.log("Seed start");
-    await db.insert(user).values(data);
     console.log("Seed done");
   } catch (error) {
     console.error("Error seeding the database:", error);
