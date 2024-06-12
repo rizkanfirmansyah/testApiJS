@@ -13,15 +13,15 @@ export async function getBookHandler() {
 export async function insertBookHandler(req: FastifyRequest, res: FastifyReply) {
   const request: any = req.body;
   try {
-    if (!request?.name) throw createError("Username cannot be null", 422);
+    if (!request?.name) throw createError("Name (title book) cannot be null", 422);
     const name = request?.name;
-    const description = request?.description;
-    const published_at = request?.published_at;
-    const pages = request?.pages;
-    const author = request?.author;
-    const price = request?.price;
-    const genre_id = request?.genre_id;
-    const user_id = req.user.id ?? null;
+    const description = request?.description ?? null;
+    const published_at = request?.published_at ?? null;
+    const pages = request?.pages ?? null;
+    const author = request?.author ?? null;
+    const price = request?.price ?? null;
+    const genre_id = request?.genre_id ?? null;
+    const user_id = req.user?.id ?? null;
 
     const data = await insertBook({ name, description, genre_id, published_at, author, pages, price, user_id });
 

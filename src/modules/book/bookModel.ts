@@ -26,7 +26,6 @@ export async function insertBook({
   const data = {
     name,
     genre_id,
-    id,
     published_at,
     author,
     description,
