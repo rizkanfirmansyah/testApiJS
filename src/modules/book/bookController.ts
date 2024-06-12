@@ -4,10 +4,16 @@ import { getBooks, insertBook } from "./bookModel";
 import { CustomError } from "../../utils/types/error";
 import { createError } from "../../utils/errorUtils";
 
-export async function getBookHandler() {
-  const data = await getBooks();
+export async function getBookHandler(req: FastifyRequest, res: FastifyReply) {
+  const id = req.user?.id ?? null;
+  const data = await getBooks({ id });
 
-  // return ResponseJSON({ data });
+  try {
+    ResponseJSON({ data, message: "Book has already!", res });
+  } catch (err) {
+    const error = err as CustomError;
+    ResponseJSON({ data: null, message: "Error", error: error?.message, status: error?.statusCode ?? 500, res });
+  }
 }
 
 export async function insertBookHandler(req: FastifyRequest, res: FastifyReply) {

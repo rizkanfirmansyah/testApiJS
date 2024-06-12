@@ -2,10 +2,13 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { books } from "../../../database/schema/book";
 import setupDatabase from "../../../database";
 import { BookType } from "../../utils/types/book";
+import { sql } from "drizzle-orm";
 
-export async function getBooks() {
+export async function getBooks({ id = null }: any) {
   const DB = await setupDatabase();
-  const result = await DB.select().from(books);
+  const result = await DB.select()
+    .from(books)
+    .where(sql`${books.user_id} = ${id}`);
 
   return result;
 }
