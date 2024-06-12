@@ -59,7 +59,7 @@ async function seeder() {
 
     // Insert data ke dalam tabel books
     await db.insert(books).values({
-      name: "Naruto Sirippuden",
+      name: "Naruto",
       description:
         "Naruto Shippuden adalah sebuah seri anime yang diadaptasi dari bagian II manga Naruto. Serial ini disutradarai oleh Hayato Date dan diproduksi oleh Studio Pierrot dan TV Tokyo. Pada bagian ini, pergerakan organisasi Akatsuki semakin terlihat.",
       pages: 200,
