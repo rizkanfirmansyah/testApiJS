@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsnd --respawn --transpile-only src/app.ts",
-    "start": "node dist/app.js",
+    "start": "node dist/src/app.js",
     "build": "tsc",
     "db:migrate": "pnpm drizzle-kit push",
     "db:generate": "pnpm drizzle-kit generate",
