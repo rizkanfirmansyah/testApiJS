@@ -6,7 +6,13 @@ import { user } from "./schema/user";
 import { books, categories, genres } from "./schema/book";
 
 async function seeder() {
-  const sql = postgres(process.env.DB_URL ?? "postgres://postgres:password@0.0.0.0:5432/fastify", { max: 1 });
+  const host = process.env.DB_HOST ?? "0.0.0.0";
+  const user = process.env.DB_USER ?? "postgres";
+  const password = process.env.DB_PASSWORD ?? "password";
+  const dbname = process.env.DB_NAME ?? "fastify";
+  const port = process.env.DB_PORT ?? 5432;
+
+  const Sql = postgres(process.env.DB_URL ?? `postgres://${user}:${password}@${host}:${port}/${dbname}`, { max: 1 });
   const db = drizzle(sql);
 
   try {

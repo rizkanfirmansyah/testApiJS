@@ -13,10 +13,10 @@ export default async function setupDatabase() {
   const host = process.env.DB_HOST ?? "0.0.0.0";
   const user = process.env.DB_USER ?? "postgres";
   const password = process.env.DB_PASSWORD ?? "password";
-  const db = process.env.DB_NAME ?? "fastify";
+  const dbname = process.env.DB_NAME ?? "fastify";
   const port = process.env.DB_PORT ?? 5432;
 
-  const Sql = postgres(process.env.DB_URL ?? `postgres://${user}:${password}@${host}:${port}/${db}`, { max: 1 });
+  const Sql = postgres(process.env.DB_URL ?? `postgres://${user}:${password}@${host}:${port}/${dbname}`, { max: 1 });
   try {
     DB = drizzle(Sql);
     // Optionally run migrations
