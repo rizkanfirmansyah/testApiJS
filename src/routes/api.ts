@@ -21,7 +21,8 @@ async function userRoutes(server: FastifyInstance) {
     },
   };
 
-  server.get("/", function (req, res) {
+  server.get("/", getUserHandler);
+  server.get("/test", function (req, res) {
     return res.send("Hello World!");
   });
 }

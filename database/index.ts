@@ -1,20 +1,25 @@
 import dotenv from "dotenv";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 dotenv.config();
 
-export default async function setupDatabase() {
-  const SqlMigrate = postgres(process.env.DB_URL ?? "postgres://postgres:password@0.0.0.0:5432/fastify", { max: 1 });
-  const SqlConfigPromise = postgres(process.env.DB_URL ?? "postgres://postgres:password@0.0.0.0:5432/fastify");
-  try {
-    const SqlConfig = await SqlConfigPromise;
-    // const DBMigrate = drizzle(SqlMigrate);
-    // await migrate(DBMigrate, { migrationsFolder: "drizzle" });
+let DB: any = null;
 
-    return SqlConfig;
+export default async function setupDatabase() {
+  if (DB) {
+    return DB;
+  }
+
+  const Sql = postgres(process.env.DB_URL ?? "postgres://postgres:password@0.0.0.0:5432/fastify", { max: 1 });
+  try {
+    DB = drizzle(Sql);
+    // Optionally run migrations
+    // await migrate(DB, { migrationsFolder: "drizzle" });
+    return DB;
   } catch (error) {
-    await SqlConfigPromise.end();
+    if (Sql) {
+      await Sql.end();
+    }
     console.error("Error setting up database:", error);
     throw error;
   }
