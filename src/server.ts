@@ -1,12 +1,32 @@
-import Fastify, { FastifyInstance } from "fastify";
-import { bookRoutes, userRoutes } from "./routes/api";
-import { withRefResolver } from "fastify-zod";
+import fjwt, { JWT } from "@fastify/jwt";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
+import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { version } from "../package.json";
+import { authRoutes, bookRoutes, userRoutes } from "./routes/api";
+import dotenv from "dotenv";
+dotenv.config();
+
+const server: FastifyInstance = Fastify({});
+
+declare module "fastify" {
+  interface FastifyRequest {
+    jwt: JWT;
+  }
+  export interface FastifyInstance {
+    authenticate: any;
+  }
+}
 
 function buildServer() {
-  const server: FastifyInstance = Fastify({});
+  server.register(fjwt, { secret: process.env.DB_SECRET ?? "" });
+  server.decorate("authenticate", async (req: FastifyRequest, res: FastifyReply) => {
+    try {
+      await req.jwtVerify();
+    } catch (error) {
+      return res.send(error);
+    }
+  });
 
   server.get("/healthcheck", async function () {
     return { status: "OK" };
@@ -45,8 +65,9 @@ function buildServer() {
 
   server.register(userRoutes, { prefix: "api/users" });
   server.register(bookRoutes, { prefix: "api/books" });
+  server.register(authRoutes, { prefix: "auth" });
 
   return server;
 }
 
-export default buildServer;
+export { buildServer, server };

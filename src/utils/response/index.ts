@@ -1,14 +1,19 @@
+import { FastifyReply } from "fastify";
+
 interface ResponseJSONParams<T> {
   data: T;
   message?: string;
-  success?: boolean;
+  status?: number;
+  error?: any;
+  res: FastifyReply;
 }
 
-export default function ResponseJSON<T>({ data, message, success = true }: ResponseJSONParams<T>) {
+export default function ResponseJSON<T>({ data, message, status = 200, error, res }: ResponseJSONParams<T>) {
   const result = {
     data,
     message,
-    success: success ?? true,
+    error,
   };
-  return result;
+
+  return res.status(status).send(result);
 }

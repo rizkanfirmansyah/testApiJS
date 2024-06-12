@@ -10,6 +10,12 @@ export default async function setupDatabase() {
     return DB;
   }
 
+  const host = process.env.DB_HOST ?? "";
+  const user = process.env.DB_USER ?? "";
+  const password = process.env.DB_PASSWORD ?? "";
+  const db = process.env.DB_NAME ?? "";
+  const port = process.env.DB_PORT ?? 5432;
+
   const Sql = postgres(process.env.DB_URL ?? "postgres://postgres:password@0.0.0.0:5432/fastify", { max: 1 });
   try {
     DB = drizzle(Sql);
