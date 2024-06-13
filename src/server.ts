@@ -5,9 +5,11 @@ import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import { version } from "../package.json";
 import { authRoutes, bookRoutes, userRoutes } from "./routes/api";
 import dotenv from "dotenv";
+import moment from "moment-timezone";
 dotenv.config();
 
 const server: FastifyInstance = Fastify({});
+moment.tz.setDefault("Asia/Jakarta");
 
 declare module "fastify" {
   interface FastifyRequest {

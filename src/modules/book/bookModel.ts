@@ -49,7 +49,7 @@ export async function updateBook(data: BookType, bookId: string, id: number) {
     .where(sql`${books.user_id} = ${id} and ${books.id} = ${bookId}`)
     .returning();
 
-  return result;
+  return result[0];
 }
 
 export async function deleteBook({ id = null, bookId = "0" }: any) {
