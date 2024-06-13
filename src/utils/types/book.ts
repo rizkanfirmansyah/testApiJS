@@ -9,3 +9,10 @@ export interface BookType {
   user_id?: number;
   published_at: string;
 }
+
+export interface CategoryType {
+  id?: number;
+  name: string;
+  user_id?: number;
+  description?: string;
+}
