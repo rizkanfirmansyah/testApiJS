@@ -34,10 +34,10 @@ export async function insertBook(data: BookType) {
   return result;
 }
 
-export async function updateBook(data: BookType, bookId: number, id: number) {
+export async function updateBook(data: BookType, bookId: string, id: number) {
   const DB = await setupDatabase();
 
-  if (bookId < 1) {
+  if (!bookId || parseInt(bookId) < 1) {
     return null;
   }
   if (id < 1) {
