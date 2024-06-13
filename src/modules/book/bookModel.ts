@@ -34,6 +34,24 @@ export async function insertBook(data: BookType) {
   return result;
 }
 
+export async function updateBook(data: BookType, bookId: number, id: number) {
+  const DB = await setupDatabase();
+
+  if (bookId < 1) {
+    return null;
+  }
+  if (id < 1) {
+    return null;
+  }
+
+  const result = await DB.update(books)
+    .set(data)
+    .where(sql`${books.user_id} = ${id} and ${books.id} = ${bookId}`)
+    .returning();
+
+  return result;
+}
+
 export async function deleteBook({ id = null, bookId = "0" }: any) {
   const DB = await setupDatabase();
 
