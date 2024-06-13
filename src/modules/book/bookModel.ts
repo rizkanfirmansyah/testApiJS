@@ -54,3 +54,20 @@ export async function insertBook({
 
   return result;
 }
+
+export async function deleteBook({ id = null, bookId = "0" }: any) {
+  const DB = await setupDatabase();
+
+  if (bookId == "0") {
+    return null;
+  }
+  if (id < 1) {
+    return null;
+  }
+
+  const result = await DB.delete(books)
+    .where(sql`${books.user_id} = ${id} and ${books.id} = ${bookId}`)
+    .returning();
+
+  return result;
+}

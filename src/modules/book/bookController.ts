@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import ResponseJSON from "../../utils/response";
-import { getBooks, insertBook } from "./bookModel";
+import { deleteBook, getBooks, insertBook } from "./bookModel";
 import { CustomError } from "../../utils/types/error";
 import { createError } from "../../utils/errorUtils";
 
@@ -35,6 +35,25 @@ export async function insertBookHandler(req: FastifyRequest, res: FastifyReply) 
     const data = await insertBook({ name, description, genre_id, published_at, author, pages, price, user_id });
 
     ResponseJSON({ data, message: "Book has been inserted!!", res });
+  } catch (err) {
+    const error = err as CustomError;
+    ResponseJSON({ data: null, message: "Error", error: error?.message, status: error?.statusCode ?? 500, res });
+  }
+}
+
+export async function deleteBookHandler(req: FastifyRequest, res: FastifyReply) {
+  const id = req.user?.id ?? null;
+  const params = req.params as { bookId: string };
+  const { bookId } = params;
+
+  const data = await deleteBook({ id, bookId });
+
+  if (data.length < 1) {
+    throw createError("Book not found", 404);
+  }
+
+  try {
+    ResponseJSON({ data, message: "Book has been deleted!", res });
   } catch (err) {
     const error = err as CustomError;
     ResponseJSON({ data: null, message: "Error", error: error?.message, status: error?.statusCode ?? 500, res });
