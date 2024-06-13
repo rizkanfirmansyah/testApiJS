@@ -1,5 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { deleteBookHandler, getBookHandler, insertBookHandler } from "../modules/book/bookController";
+import {
+  deleteBookHandler,
+  getBookHandler,
+  insertBookHandler,
+  updateBookHandler,
+} from "../modules/book/bookController";
 import { getUserHandler, loginHandler, registerHandler } from "../modules/user/userController";
 
 async function userRoutes(server: FastifyInstance) {
@@ -10,6 +15,7 @@ async function bookRoutes(server: FastifyInstance) {
   server.get("/", { preHandler: [server.authenticate] }, getBookHandler);
   server.get("/:bookId", { preHandler: [server.authenticate] }, getBookHandler);
   server.delete("/:bookId", { preHandler: [server.authenticate] }, deleteBookHandler);
+  server.put("/:bookId", { preHandler: [server.authenticate] }, updateBookHandler);
   server.get("/all", getBookHandler);
   server.post("/all", insertBookHandler);
   server.post("/", { preHandler: [server.authenticate] }, insertBookHandler);
