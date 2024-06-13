@@ -26,29 +26,8 @@ export async function getBooks({ id = null, bookId = "0" }: any) {
   }
 }
 
-export async function insertBook({
-  name,
-  genre_id,
-  id,
-  published_at,
-  author,
-  description,
-  pages,
-  price,
-  user_id,
-}: BookType) {
+export async function insertBook(data: BookType) {
   const DB = await setupDatabase();
-
-  const data = {
-    name,
-    genre_id,
-    published_at,
-    author,
-    description,
-    pages,
-    price,
-    user_id,
-  };
 
   const result = await DB.insert(books).values(data).returning();
 
