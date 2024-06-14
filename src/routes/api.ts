@@ -27,13 +27,11 @@ async function bookRoutes(server: FastifyInstance) {
   server.post("/", { preHandler: [server.authenticate] }, insertBookHandler);
 }
 
-async function categoryRoutes(server: FastifyInstance) {
+async function categoryRoutes(server: FastifyInstance) {  
   server.get("/", { preHandler: [server.authenticate] }, getCategoryHandler);
   server.get("/:categoryId", { preHandler: [server.authenticate] }, getCategoryHandler);
   server.delete("/:categoryId", { preHandler: [server.authenticate] }, deleteCategoryHandler);
   server.put("/:categoryId", { preHandler: [server.authenticate] }, updateCategoryHandler);
-  server.get("/all", getCategoryHandler);
-  server.post("/all", insertCategoryHandler);
   server.post("/", { preHandler: [server.authenticate] }, insertCategoryHandler);
 }
 

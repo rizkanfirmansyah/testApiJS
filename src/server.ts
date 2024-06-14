@@ -64,6 +64,14 @@ function buildServer() {
       components: {},
       consumes: ["application/json"],
       produces: ["application/json"],
+      securityDefinitions: {
+        bearerAuth: {
+          type: "apiKey",
+          name: "Authorization",
+          in: "header",
+          description: "Enter the Bearer token in the format **Bearer <token>**",
+        },
+      },
     },
   };
 
