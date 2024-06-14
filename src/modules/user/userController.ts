@@ -35,10 +35,11 @@ export async function registerHandler(req: FastifyRequest, res: FastifyReply) {
 export async function loginHandler(req: FastifyRequest<{ Body: LoginInput }>, res: FastifyReply) {
   const request: any = req.body;
   try {
-    if (!request?.username) throw createError("Username cannot be null", 422);
+    if (!request?.username && !request?.email) throw createError("Username cannot be null", 422);
     if (!request?.password) throw createError("password cannot be null", 422);
 
-    const { username, password } = req.body as { username: string; password: string };
+    const { password } = req.body as { username: string; password: string };
+    const username = request.username ?? request.email;
     const data = await loginUser({ username });
     if (!data.length) {
       throw createError("Invalid username or password", 401);
