@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import setupDatabase from "../../../database";
-import { books } from "../../../database/schema/book";
+import { books, categories, genres } from "../../../database/schema/book";
 import { BookType } from "../../utils/types/book";
 
 export async function getBooks({ id = null, bookId = "0" }: any) {
@@ -13,9 +13,16 @@ export async function getBooks({ id = null, bookId = "0" }: any) {
     return result ? result[0] : null;
   }
   if (id > 0) {
-    const result = await DB.select()
+    const result = await DB.select({
+      book: books,
+      genre: genres,
+      category: categories,
+    })
       .from(books)
-      .where(sql`${books.user_id} = ${id}`);
+      .leftJoin(genres, sql`${books.genre_id} = ${genres.id}`)
+      .leftJoin(categories, sql`${categories.id} = ${genres.category_id}`)
+      .where(sql`${books.user_id} = ${id}`)
+      .execute();
     return result;
   }
   if (id < 1) {
