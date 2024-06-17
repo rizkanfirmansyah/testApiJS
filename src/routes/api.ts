@@ -12,6 +12,12 @@ import {
   insertCategoryHandler,
   updateCategoryHandler,
 } from "../modules/category/categoryController";
+import {
+  deleteGenreHandler,
+  getGenreHandler,
+  insertGenreHandler,
+  updateGenreHandler,
+} from "../modules/genre/genreController";
 
 async function userRoutes(server: FastifyInstance) {
   server.get("/", { preHandler: [server.authenticate] }, getUserHandler);
@@ -27,7 +33,7 @@ async function bookRoutes(server: FastifyInstance) {
   server.post("/", { preHandler: [server.authenticate] }, insertBookHandler);
 }
 
-async function categoryRoutes(server: FastifyInstance) {  
+async function categoryRoutes(server: FastifyInstance) {
   server.get("/", { preHandler: [server.authenticate] }, getCategoryHandler);
   server.get("/:categoryId", { preHandler: [server.authenticate] }, getCategoryHandler);
   server.delete("/:categoryId", { preHandler: [server.authenticate] }, deleteCategoryHandler);
@@ -35,9 +41,17 @@ async function categoryRoutes(server: FastifyInstance) {
   server.post("/", { preHandler: [server.authenticate] }, insertCategoryHandler);
 }
 
+async function genreRoutes(server: FastifyInstance) {
+  server.get("/", { preHandler: [server.authenticate] }, getGenreHandler);
+  server.get("/:genreId", { preHandler: [server.authenticate] }, getGenreHandler);
+  server.delete("/:genreId", { preHandler: [server.authenticate] }, deleteGenreHandler);
+  server.put("/:genreId", { preHandler: [server.authenticate] }, updateGenreHandler);
+  server.post("/", { preHandler: [server.authenticate] }, insertGenreHandler);
+}
+
 async function authRoutes(server: FastifyInstance) {
   server.post("/register", registerHandler);
   server.post("/login", loginHandler);
 }
 
-export { authRoutes, bookRoutes, userRoutes, categoryRoutes };
+export { authRoutes, bookRoutes, userRoutes, categoryRoutes, genreRoutes };

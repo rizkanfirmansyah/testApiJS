@@ -3,7 +3,7 @@ import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { version } from "../package.json";
-import { authRoutes, bookRoutes, categoryRoutes, userRoutes } from "./routes/api";
+import { authRoutes, bookRoutes, categoryRoutes, genreRoutes, userRoutes } from "./routes/api";
 import dotenv from "dotenv";
 import moment from "moment-timezone";
 dotenv.config();
@@ -86,6 +86,7 @@ function buildServer() {
   server.register(userRoutes, { prefix: "api/users" });
   server.register(bookRoutes, { prefix: "api/books" });
   server.register(categoryRoutes, { prefix: "api/categories" });
+  server.register(genreRoutes, { prefix: "api/genres" });
   server.register(authRoutes, { prefix: "auth" });
 
   return server;
