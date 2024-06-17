@@ -83,6 +83,10 @@ function buildServer() {
   server.register(swagger, swaggerOptions);
   server.register(swaggerUI, swaggerUiOptions);
 
+  server.get("/", async function (req: FastifyRequest, res: FastifyReply) {
+    res.send("OPEN API Versi " + version);
+  });
+
   server.register(userRoutes, { prefix: "api/users" });
   server.register(bookRoutes, { prefix: "api/books" });
   server.register(categoryRoutes, { prefix: "api/categories" });
