@@ -16,3 +16,11 @@ export interface CategoryType {
   user_id?: number;
   description?: string;
 }
+
+export interface GenreType {
+  id?: number;
+  name: string;
+  user_id?: number;
+  category_id?: number;
+  description?: string;
+}
