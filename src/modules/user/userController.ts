@@ -4,7 +4,7 @@ import { getUser, loginUser, registerUser } from "./userModel";
 import bcrypt from "bcrypt";
 import { createError } from "../../utils/errorUtils";
 import { CustomError } from "../../utils/types/error";
-import { server } from "../../server";
+import { server, tokenBlacklist } from "../../server";
 
 export async function getUserHandler(req: FastifyRequest, res: FastifyReply) {
   const data = await getUser();
@@ -59,6 +59,19 @@ export async function loginHandler(req: FastifyRequest, res: FastifyReply) {
       access_token: accessToken,
     };
     ResponseJSON({ data: result, message: "Success Login", res });
+  } catch (err) {
+    const error = err as CustomError;
+    ResponseJSON({ data: null, message: "Error", error: error?.message, status: error?.statusCode ?? 500, res });
+  }
+}
+
+export async function logoutHandler(req: FastifyRequest, res: FastifyReply) {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (token) {
+      tokenBlacklist.add(token);
+    }
+    ResponseJSON({ data: null, message: "Success Logout", res });
   } catch (err) {
     const error = err as CustomError;
     ResponseJSON({ data: null, message: "Error", error: error?.message, status: error?.statusCode ?? 500, res });

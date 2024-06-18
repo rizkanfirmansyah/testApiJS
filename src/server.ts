@@ -6,10 +6,14 @@ import { version } from "../package.json";
 import { authRoutes, bookRoutes, categoryRoutes, genreRoutes, userRoutes } from "./routes/api";
 import dotenv from "dotenv";
 import moment from "moment-timezone";
+import ResponseJSON from "./utils/response";
 dotenv.config();
 
 const server: FastifyInstance = Fastify({});
 moment.tz.setDefault("Asia/Jakarta");
+
+// JWT Token Blacklist
+const tokenBlacklist = new Set<string>();
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -35,8 +39,12 @@ function buildServer() {
   server.decorate("authenticate", async (req: FastifyRequest, res: FastifyReply) => {
     try {
       await req.jwtVerify();
+      const token = req.headers.authorization?.split(" ")[1];
+      if (token && tokenBlacklist.has(token)) {
+        throw new Error("Token is blacklisted");
+      }
     } catch (error) {
-      return res.send(error);
+      ResponseJSON({ data: null, message: "Error", error: "User is Unauthorized", status: 403, res });
     }
   });
 
@@ -96,4 +104,4 @@ function buildServer() {
   return server;
 }
 
-export { buildServer, server };
+export { buildServer, server, tokenBlacklist };

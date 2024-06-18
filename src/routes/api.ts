@@ -5,7 +5,7 @@ import {
   insertBookHandler,
   updateBookHandler,
 } from "../modules/book/bookController";
-import { getUserHandler, loginHandler, registerHandler } from "../modules/user/userController";
+import { getUserHandler, loginHandler, logoutHandler, registerHandler } from "../modules/user/userController";
 import {
   deleteCategoryHandler,
   getCategoryHandler,
@@ -52,6 +52,7 @@ async function genreRoutes(server: FastifyInstance) {
 async function authRoutes(server: FastifyInstance) {
   server.post("/register", registerHandler);
   server.post("/login", loginHandler);
+  server.post("/logout", { preHandler: [server.authenticate] }, logoutHandler);
 }
 
 export { authRoutes, bookRoutes, userRoutes, categoryRoutes, genreRoutes };
