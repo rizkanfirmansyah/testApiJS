@@ -1,13 +1,17 @@
 import { buildServer } from "./server";
+import dotenv from "dotenv";
+dotenv.config();
 
 const server = buildServer();
 
 async function main() {
+  const port = process.env.APP_PORT ? parseInt(process.env.APP_PORT, 10) : 3000;
+  const host = process.env.APP_HOST ?? "0.0.0.0";
   try {
     server.listen(
       {
-        port: 3000,
-        host: "0.0.0.0",
+        port,
+        host,
       },
       (err, address) => {
         if (err) {
@@ -15,6 +19,7 @@ async function main() {
           process.exit(1);
         }
         server.log.info(`Server listening at ${address}`);
+        console.log(`Server listening at ${address}`);
       }
     );
   } catch (e) {
