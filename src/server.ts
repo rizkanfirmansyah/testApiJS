@@ -119,5 +119,4 @@ function buildServer() {
 
   return server;
 }
-
 export { buildServer, server, tokenBlacklist };

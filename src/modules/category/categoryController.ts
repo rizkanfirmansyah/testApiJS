@@ -1,10 +1,10 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { server } from "../../server";
 import { createError } from "../../utils/errorUtils";
 import ResponseJSON from "../../utils/response";
 import { CategoryType } from "../../utils/types/book";
 import { CustomError } from "../../utils/types/error";
 import { deleteCategory, getCategories, insertCategory, updateCategory } from "./categoryModel";
+import { server } from "../../server";
 
 export async function getCategoryHandler(req: FastifyRequest, res: FastifyReply) {
   const id = req.user?.id ?? null;
@@ -16,14 +16,14 @@ export async function getCategoryHandler(req: FastifyRequest, res: FastifyReply)
     const key = id + "user:category";
     let data = await redis.get(key);
 
-    if (data) data = JSON.parse(data);
-
-    if (!data) {
-      data = await getCategories({ id, categoryId });
-      await redis.set(key, JSON.stringify(data));
+    if (data) {
+      data = JSON.parse(data);
+      return ResponseJSON({ data, message: "Category has already!", res });
     }
 
-    ResponseJSON({ data, message: "Category has already!", res });
+    data = await getCategories({ id, categoryId });
+    redis.set(key, JSON.stringify(data), "EX", 3600);
+    return ResponseJSON({ data, message: "Category has already!", res });
   } catch (err) {
     const error = err as CustomError;
     ResponseJSON({ data: null, message: "Error", error: error?.message, status: error?.statusCode ?? 500, res });
