@@ -14,7 +14,6 @@ dotenv.config();
 const server: FastifyInstance = Fastify({ logger: true });
 moment.tz.setDefault("Asia/Jakarta");
 
-// JWT Token Blacklist
 const tokenBlacklist = new Set<string>();
 
 declare module "fastify" {
