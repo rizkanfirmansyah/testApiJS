@@ -14,16 +14,15 @@ export async function getCategoryHandler(req: FastifyRequest, res: FastifyReply)
 
   try {
     const key = id + "user:category";
-    // let data = await redis.get(key);
-    let data = null;
+    let data = await redis.get(key);
 
-    // if (data) {
-    //   data = JSON.parse(data);
-    //   return ResponseJSON({ data, message: "Category has already!", res });
-    // }
+    if (data) {
+      data = JSON.parse(data);
+      return ResponseJSON({ data, message: "Category has already!", res });
+    }
 
     data = await getCategories({ id, categoryId });
-    // redis.set(key, JSON.stringify(data), "EX", 3600);
+    redis.set(key, JSON.stringify(data), "EX", 3600);
     return ResponseJSON({ data, message: "Category has already!", res });
   } catch (err) {
     const error = err as CustomError;
