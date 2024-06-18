@@ -4,7 +4,6 @@ import { getUser, loginUser, registerUser } from "./userModel";
 import bcrypt from "bcrypt";
 import { createError } from "../../utils/errorUtils";
 import { CustomError } from "../../utils/types/error";
-import { LoginInput } from "./userSchema";
 import { server } from "../../server";
 
 export async function getUserHandler(req: FastifyRequest, res: FastifyReply) {
@@ -32,7 +31,7 @@ export async function registerHandler(req: FastifyRequest, res: FastifyReply) {
   }
 }
 
-export async function loginHandler(req: FastifyRequest<{ Body: LoginInput }>, res: FastifyReply) {
+export async function loginHandler(req: FastifyRequest, res: FastifyReply) {
   const request: any = req.body;
   try {
     if (!request?.username && !request?.email) throw createError("Username cannot be null", 422);
