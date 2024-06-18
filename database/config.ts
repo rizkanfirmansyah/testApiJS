@@ -6,5 +6,3 @@ export const dbuser = process.env.DB_USER ?? "postgres";
 export const dbpassword = process.env.DB_PASSWORD ?? "password";
 export const dbname = process.env.DB_NAME ?? "fastify";
 export const dbport = process.env.DB_PORT ?? 5432;
-
-// export { dbname, host, password, port, user };

@@ -2,6 +2,7 @@ import fjwt, { JWT } from "@fastify/jwt";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import fastifyRedis from "@fastify/redis";
 import { version } from "../package.json";
 import { authRoutes, bookRoutes, categoryRoutes, genreRoutes, userRoutes } from "./routes/api";
 import dotenv from "dotenv";
@@ -9,7 +10,7 @@ import moment from "moment-timezone";
 import ResponseJSON from "./utils/response";
 dotenv.config();
 
-const server: FastifyInstance = Fastify({});
+const server: FastifyInstance = Fastify({ logger: true });
 moment.tz.setDefault("Asia/Jakarta");
 
 // JWT Token Blacklist
@@ -35,6 +36,13 @@ declare module "@fastify/jwt" {
 }
 
 function buildServer() {
+  server.register(fastifyRedis, {
+    host: process.env.REDIS_HOST ?? ("127.0.0.1" as string),
+    port: Number(process.env.REDIS_PORT) ?? 6379,
+    username: process.env.REDIS_USERNAME ?? ("user" as string),
+    password: process.env.REDIS_PASSWORD ?? ("password" as string),
+  });
+
   server.register(fjwt, { secret: process.env.DB_SECRET ?? "" });
   server.decorate("authenticate", async (req: FastifyRequest, res: FastifyReply) => {
     try {
@@ -43,6 +51,8 @@ function buildServer() {
       if (token && tokenBlacklist.has(token)) {
         throw new Error("Token is blacklisted");
       }
+
+      return null;
     } catch (error) {
       ResponseJSON({ data: null, message: "Error", error: "User is Unauthorized", status: 403, res });
     }
