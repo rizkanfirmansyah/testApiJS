@@ -3,6 +3,7 @@ import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import fastifyRedis from "@fastify/redis";
+import cors from "@fastify/cors";
 import { version } from "../package.json";
 import { authRoutes, bookRoutes, categoryRoutes, genreRoutes, userRoutes } from "./routes/api";
 import dotenv from "dotenv";
@@ -36,6 +37,12 @@ declare module "@fastify/jwt" {
 }
 
 function buildServer() {
+  server.register(cors, {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  });
+
   server.register(fastifyRedis, {
     host: process.env.REDIS_HOST ?? ("127.0.0.1" as string),
     port: Number(process.env.REDIS_PORT) ?? 6379,
