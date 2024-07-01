@@ -9,6 +9,7 @@ import { authRoutes, bookRoutes, categoryRoutes, genreRoutes, userRoutes } from 
 import dotenv from "dotenv";
 import moment from "moment-timezone";
 import ResponseJSON from "./utils/response";
+import { setupRedis } from "./utils/redis";
 dotenv.config();
 
 const server: FastifyInstance = Fastify({ logger: true });
@@ -42,12 +43,7 @@ function buildServer() {
     allowedHeaders: ["Content-Type", "Authorization"],
   });
 
-  server.register(fastifyRedis, {
-    host: process.env.REDIS_HOST ?? ("127.0.0.1" as string),
-    port: Number(process.env.REDIS_PORT) ?? 6379,
-    username: process.env.REDIS_USERNAME ?? ("user" as string),
-    password: process.env.REDIS_PASSWORD ?? ("password" as string),
-  });
+  setupRedis(server);
 
   server.register(fjwt, { secret: process.env.DB_SECRET ?? "" });
   server.decorate("authenticate", async (req: FastifyRequest, res: FastifyReply) => {
@@ -64,9 +60,9 @@ function buildServer() {
     }
   });
 
-  server.get("/healthcheck", async function () {
-    return { status: "OK" };
-  });
+  // server.get("/healthcheck", async function () {
+  //   return { status: "OK" };
+  // });
 
   const swaggerOptions = {
     openapi: {
